@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Enviar Comunicado</title>
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #f3f6fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input,
+        textarea,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 14px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.2s ease;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: #1a73e8;
+        }
+
+        button {
+            background: #1a73e8;
+            color: white;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        button:hover {
+            background: #155cc2;
+        }
+
+        .msg {
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>📢 Enviar Comunicado</h2>
+
+        <label for="setor">Setor:</label>
+        <select id="setor">
+            <option value="">Selecione...</option>
+            <option value="financeiro">Financeiro</option>
+            <!-- Adicione mais setores aqui se quiser -->
+        </select>
+
+        <label for="titulo">Título:</label>
+        <input type="text" id="titulo" placeholder="Título do comunicado" />
+
+        <label for="mensagem">Mensagem:</label>
+        <textarea id="mensagem" rows="4" placeholder="Digite a mensagem..."></textarea>
+
+        <label for="link">Link:</label>
+        <input type="url" id="link" placeholder="https://..." />
+
+        <button onclick="enviarComunicado()">Enviar</button>
+
+        <div id="msg" class="msg"></div>
+    </div>
+
+    <script>
+        async function enviarComunicado() {
+            const setor = document.getElementById("setor").value;
+            const titulo = document.getElementById("titulo").value;
+            const mensagem = document.getElementById("mensagem").value;
+            const link = document.getElementById("link").value;
+            const msgDiv = document.getElementById("msg");
+
+            msgDiv.className = "msg";
+            msgDiv.textContent = "";
+
+            if (!setor || !titulo || !mensagem || !link) {
+                msgDiv.textContent = "⚠️ Preencha todos os campos.";
+                msgDiv.classList.add("error");
+                return;
+            }
+
+            try {
+                const res = await fetch("/api/comunicado", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                });
+
+
+                const data = await res.json();
+
+                if (data.success) {
+                    msgDiv.textContent = "✅ Comunicado enviado com sucesso!";
+                    msgDiv.classList.add("success");
+
+                    // limpa os campos
+                    document.getElementById("titulo").value = "";
+                    document.getElementById("mensagem").value = "";
+                    document.getElementById("link").value = "";
+                    document.getElementById("setor").value = "";
+                } else {
+                    msgDiv.textContent = "❌ Erro: " + data.error;
+                    msgDiv.classList.add("error");
+                }
+            } catch (err) {
+                msgDiv.textContent = "❌ Falha: " + err.message;
+                msgDiv.classList.add("error");
+            }
+        }
+    </script>
+</body>
+
+</html>
