@@ -1,11 +1,11 @@
 {
     "builds": [
         {
-            "src": "api/comunicado.js",
+            "src": "server.js",
             "use": "@vercel/node"
         },
         {
-            "src": "public/**/*",
+            "src": "pages/**/*",
             "use": "@vercel/static"
         }
     ]
