@@ -802,7 +802,7 @@
             }
 
             .hero-text {
-                width: 400px;
+                width: 100%;
                 padding-right: 15px;
                 font-size: 0.9rem !important;
             }
@@ -831,8 +831,25 @@
                 font-size: 1.2rem;
                 padding: 12px 20px;
             }
+        }
 
+        /* Estilo para o efeito de digitação */
+        .typing-container {
+            display: inline-block;
+            position: relative;
+        }
 
+        .typing-text {
+            color: #F5B700;
+            font-weight: 800;
+            border-right: 2px solid #F5B700;
+            padding-right: 5px;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: #F5B700; }
+            50% { border-color: transparent; }
         }
     </style>
 </head>
@@ -859,8 +876,7 @@
     <section class="hero">
         <div class="hero-content">
             <div class="hero-text">
-                <h1><span style="color: #F5B700;">Pare de perder vendas</span> e turbine seus resultados com seu site profissional
-                </h1>
+                <h1><span class="typing-container" style="color: #F5B700;" id="typing-text"></span> e turbine seus resultados com seu site profissional</h1>
                 <p class="hero-subtitle">Venda todos os dias com seu site profissional.</p>
 
                 <div class="hero-buttons">
@@ -1103,6 +1119,56 @@
                     phone.style.transform = `perspective(1000px) rotateY(${10 + offsetX}deg) rotateX(${5 + offsetY}deg)`;
                 }
             });
+        });
+
+        // Efeito de digitação
+        const phrases = [
+            "Pare de perder vendas",
+            "Tenha mais vendas", 
+            "Cresça no mercado"
+        ];
+        
+        let currentPhrase = 0;
+        let currentChar = 0;
+        let isDeleting = false;
+        let typingSpeed = 100;
+        let deletingSpeed = 50;
+        let pauseTime = 1500;
+        
+        function typeEffect() {
+            const typingElement = document.getElementById('typing-text');
+            const currentText = phrases[currentPhrase];
+            
+            if (isDeleting) {
+                // Apagando
+                typingElement.textContent = currentText.substring(0, currentChar - 1);
+                currentChar--;
+                typingSpeed = deletingSpeed;
+            } else {
+                // Digitando
+                typingElement.textContent = currentText.substring(0, currentChar + 1);
+                currentChar++;
+                typingSpeed = 100;
+            }
+            
+            // Verificar se terminou de digitar
+            if (!isDeleting && currentChar === currentText.length) {
+                // Pausa antes de começar a apagar
+                typingSpeed = pauseTime;
+                isDeleting = true;
+            } else if (isDeleting && currentChar === 0) {
+                // Terminou de apagar, passar para a próxima frase
+                isDeleting = false;
+                currentPhrase = (currentPhrase + 1) % phrases.length;
+                typingSpeed = 500; // Pausa antes de começar a digitar a próxima frase
+            }
+            
+            setTimeout(typeEffect, typingSpeed);
+        }
+        
+        // Iniciar o efeito quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(typeEffect, 1000);
         });
     </script>
 </body>
